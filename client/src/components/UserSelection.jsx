@@ -1,42 +1,41 @@
-import React from "react";
+import { useState } from "react";
 
-const UserSelection = ({ setCategory, setGenre, setSong }) => {
-  const categories = ["Pop", "Rock", "Jazz", "Classical"];
-  const genres = ["Indie", "Hip-Hop", "Alternative", "Electronic"];
-  const songs = ["Song A", "Song B", "Song C", "Song D"];
+import { CategoryProvider } from "../context/GlobalContext";
+import Categories from "./UserOptions/Categories";
+import Genres from "./UserOptions/Genres";
+import Songs from "./UserOptions/Songs";
+import Karaoke from "./Karaoke";
+
+const UserSelection = ({ previousPage }) => {
+  const [currentSelection, setCurrentSelection] = useState(0);
+
+  function handleNext() {
+    setCurrentSelection((prevSelection) => prevSelection + 1);
+  }
+
+  function handlePrevious() {
+    if (currentSelection > 0)
+      setCurrentSelection((prevSelection) => prevSelection - 1);
+  }
+
+  const selectionOrder = [
+    <Categories nextSelection={handleNext} />,
+    <Genres nextSelection={handleNext} />,
+    <Songs nextSelection={handleNext} />,
+    <Karaoke />,
+  ];
 
   return (
-    <div>
-      {/* Category Select */}
-      <select onChange={(e) => setCategory(e.target.value)} defaultValue="">
-        <option value="">Select Category</option>
-        {categories.map((category, index) => (
-          <option key={index} value={category}>
-            {category}
-          </option>
-        ))}
-      </select>
-
-      {/* Genre Select */}
-      <select onChange={(e) => setGenre(e.target.value)} defaultValue="">
-        <option value="">Select Genre</option>
-        {genres.map((genre, index) => (
-          <option key={index} value={genre}>
-            {genre}
-          </option>
-        ))}
-      </select>
-
-      {/* Song Select */}
-      <select onChange={(e) => setSong(e.target.value)} defaultValue="">
-        <option value="">Select Song</option>
-        {songs.map((song, index) => (
-          <option key={index} value={song}>
-            {song}
-          </option>
-        ))}
-      </select>
-    </div>
+    <CategoryProvider>
+      {selectionOrder[currentSelection]}
+      {currentSelection > 0 && currentSelection <= selectionOrder.length ? (
+        <button className="p-4 border" onClick={handlePrevious}>
+          Previous Selection
+        </button>
+      ) : (
+        <button onClick={previousPage}>Previous Page</button>
+      )}
+    </CategoryProvider>
   );
 };
 
