@@ -21,19 +21,28 @@ const Songs = ({ nextSelection }) => {
     getSongs();
   }, []);
 
+  console.log(songs);
+
   return (
-    <div>
+    <div className={`${songs.length > 2 ? "grid-cols-3" : null} grid gap-4`}>
       {songs.map((song, i) => (
         <div
           key={i}
-          className="p-2 w-fit border"
+          className={`p-4 bg-blue-100 rounded grid overflow-hidden cursor-pointer border-2 transition-all ${
+            selectedSong === song
+              ? "border-black shadow-lg"
+              : "border-transparent"
+          }`}
           onClick={() => setSelectedSong(song)}
         >
-          {song}
+          <h1 className="m-auto">{song}</h1>
         </div>
       ))}
       {selectedSong && (
-        <button className="p-4 border" onClick={nextSelection}>
+        <button
+          className="bg-red-200 py-2 px-4 rounded mt-4 w-fit m-auto"
+          onClick={nextSelection}
+        >
           Start Singing
         </button>
       )}

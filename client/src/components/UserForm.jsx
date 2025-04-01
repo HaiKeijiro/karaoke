@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { addUser } from "../api/API";
+import Brands from "./Brands";
 
 const UserForm = ({ nextPage }) => {
   const nameRef = useRef(null);
@@ -9,7 +10,6 @@ const UserForm = ({ nextPage }) => {
     e.preventDefault();
 
     addUserData();
-    nextPage();
   }
 
   const addUserData = async () => {
@@ -24,26 +24,37 @@ const UserForm = ({ nextPage }) => {
     }
 
     await addUser({ name, phone });
+    nextPage();
   };
 
   return (
-    <form>
-      <div>
-        <label htmlFor="name" className="block">
-          Nama
-        </label>
-        <input ref={nameRef} type="text" className="border" id="name" />
-      </div>
-      <div>
-        <label htmlFor="no hp" className="block">
-          Nomor HP
-        </label>
-        <input ref={phoneRef} type="number" className="border" id="phone" />
-      </div>
-      <button className="bg-red-500" onClick={handleClick}>
-        Next
-      </button>
-    </form>
+    <div className="h-screen">
+      <Brands />
+
+      <form className="w-fit m-auto mt-32">
+        <h1 className="text-red-500 font-bold text-center">
+          <em>Karaoke Challenge</em>
+        </h1>
+        <div>
+          <label htmlFor="name" className="block">
+            Nama
+          </label>
+          <input ref={nameRef} type="text" className="border" id="name" />
+        </div>
+        <div>
+          <label htmlFor="no hp" className="block">
+            Nomor HP
+          </label>
+          <input ref={phoneRef} type="number" className="border" id="phone" />
+        </div>
+        <button
+          className="bg-red-200 py-2 px-4 rounded mt-4"
+          onClick={handleClick}
+        >
+          Start Game
+        </button>
+      </form>
+    </div>
   );
 };
 

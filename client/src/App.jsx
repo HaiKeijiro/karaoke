@@ -26,7 +26,7 @@ function App() {
     <>
       {start === false && <Welcome start={() => setStart(true)} />}
 
-      {start === true && <div>{pageOrder[step]}</div>}
+      {start === true && <div className="p-10">{pageOrder[step]}</div>}
     </>
   );
 }

@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+@theme {
+  --color-main: #e6166c;
+}
+
+body {
+  background-image: url("/background.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+}

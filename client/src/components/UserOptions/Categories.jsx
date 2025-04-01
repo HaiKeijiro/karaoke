@@ -5,20 +5,20 @@ const Categories = ({ nextSelection }) => {
   const { categories, setSelectedCategory } = useContext(CategoriesContext);
 
   return (
-    <>
+    <div className="flex gap-4">
       {categories.map((category, i) => (
         <div
           key={i}
-          className="w-20 h-20 border"
+          className="p-10 bg-blue-100 rounded grid"
           onClick={() => {
             setSelectedCategory(category);
             nextSelection();
           }}
         >
-          {category}
+          <h1 className="m-auto uppercase">{category}</h1>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 

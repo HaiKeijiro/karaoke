@@ -21,17 +21,17 @@ const Genres = ({ nextSelection }) => {
   }, []);
 
   return (
-    <div>
+    <div className="flex gap-4">
       {genres.map((genre, i) => (
         <div
           key={i}
-          className="w-20 h-20 border"
+          className="p-10 bg-blue-100 rounded grid"
           onClick={() => {
             setSelectedGenre(genre);
             nextSelection();
           }}
         >
-          {genre}
+          <h1 className="m-auto">{genre}</h1>
         </div>
       ))}
     </div>
