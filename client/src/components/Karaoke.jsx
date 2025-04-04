@@ -1,18 +1,17 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import { fetchLyrics, playSong } from "../api/API";
 import { CategoriesContext } from "../context/GlobalContext";
 
 const Karaoke = () => {
   const [song, setSong] = useState(null);
   const [parsedLyrics, setParsedLyrics] = useState([]);
-  const [currentLyric, setCurrentLyric] = useState(""); // To store current lyric
-  const audioRef = useRef(null); // To reference the audio element
-
+  const [currentLyricIndex, setCurrentLyricIndex] = useState(0);
+  const audioRef = useRef(null);
+  const lyricsContainerRef = useRef(null);
   const { selectedCategory, selectedGenre, selectedSong } =
     useContext(CategoriesContext);
 
   useEffect(() => {
-    // Fetch and play the song
     async function playSelectedSong() {
       const data = await playSong(
         selectedCategory,
@@ -23,7 +22,6 @@ const Karaoke = () => {
     }
     playSelectedSong();
 
-    // Fetch and parse lyrics
     async function renderLyrics() {
       const lyricsText = await fetchLyrics(
         selectedCategory,
@@ -35,61 +33,89 @@ const Karaoke = () => {
     renderLyrics();
   }, [selectedCategory, selectedGenre, selectedSong]);
 
-  // Function to parse the lyrics text
   function parseLyrics(lyricsText) {
-    const lyricsData = [];
-    const lines = lyricsText.split("\n");
-
-    lines.forEach((line) => {
-      const match = line.match(/\[(\d+):(\d+\.\d+)\](.*)/);
-      if (match) {
-        const minutes = parseInt(match[1]);
-        const seconds = parseFloat(match[2]);
-        const timeInSeconds = minutes * 60 + seconds;
-        const text = match[3].trim();
-
-        if (text) {
-          lyricsData.push({ time: timeInSeconds, text });
+    const lyricsData = lyricsText
+      .split("\n")
+      .map((line) => {
+        const match = line.match(/\[(\d+):(\d+\.\d+)\](.*)/);
+        if (match) {
+          return {
+            time: parseInt(match[1]) * 60 + parseFloat(match[2]),
+            text: match[3].trim(),
+          };
         }
-      }
-    });
-
+        return null;
+      })
+      .filter(Boolean);
     setParsedLyrics(lyricsData);
   }
 
-  // Handle timeupdate event
   function handleTimeUpdate() {
-    if (parsedLyrics.length === 0 || !audioRef.current) return;
+    if (!audioRef.current || parsedLyrics.length === 0) return;
 
     const currentTime = audioRef.current.currentTime;
-    let activeIndex = 0;
+    let activeIndex = parsedLyrics.findIndex(
+      (lyric, index) =>
+        index === parsedLyrics.length - 1 ||
+        (lyric.time <= currentTime &&
+          parsedLyrics[index + 1]?.time > currentTime)
+    );
 
-    for (let i = 0; i < parsedLyrics.length; i++) {
-      if (parsedLyrics[i].time <= currentTime) {
-        activeIndex = i;
-      }
-    }
-
-    if (parsedLyrics[activeIndex]) {
-      setCurrentLyric(parsedLyrics[activeIndex].text);
+    if (activeIndex !== -1) {
+      setCurrentLyricIndex(activeIndex);
     }
   }
 
+  // Auto-scroll to current lyric only after the timestamp starts
+  useEffect(() => {
+    if (lyricsContainerRef.current && parsedLyrics.length > 0) {
+      const activeLyric =
+        lyricsContainerRef.current.children[currentLyricIndex];
+      const firstLyricTimestamp = parsedLyrics[0].time; // Timestamp of the first lyric
+      const currentTime = audioRef.current?.currentTime || 0;
+
+      // Scroll only if current time is greater than or equal to the first lyric's timestamp
+      if (currentTime >= firstLyricTimestamp) {
+        lyricsContainerRef.current.scrollTo({
+          top:
+            activeLyric.offsetTop -
+            lyricsContainerRef.current.clientHeight / 2 +
+            activeLyric.clientHeight / 2,
+          behavior: "smooth",
+        });
+      }
+    }
+  }, [currentLyricIndex, parsedLyrics]);
+
   return (
-    <div>
-      <h1>Karaoke</h1>
+    <div className="relative mx-auto text-center text-white">
       {song && (
         <audio
           ref={audioRef}
           src={song}
-          controls
-          onTimeUpdate={handleTimeUpdate} // Attach the timeupdate event handler
+          onTimeUpdate={handleTimeUpdate}
+          className="hidden"
+          autoPlay
         />
       )}
 
-      {/* Render the current lyric */}
-      <div className="lyrics-container">
-        <p className="current-lyric">{currentLyric}</p>
+      {/* Lyrics Display */}
+      <div
+        ref={lyricsContainerRef}
+        className="w-[90vw] h-96 overflow-y-auto no-scrollbar"
+      >
+        {parsedLyrics.map((lyric, index) => (
+          <p
+            key={index}
+            className={`transition-all duration-300 px-4 text-2xl ${
+              index === currentLyricIndex
+                ? "text-white font-bold scale-110"
+                : "opacity-50"
+            }`}
+          >
+            {lyric.text}
+          </p>
+        ))}
       </div>
     </div>
   );

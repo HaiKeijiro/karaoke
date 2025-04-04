@@ -2,10 +2,37 @@
 
 @theme {
   --color-main: #e6166c;
+  --color-secondary: #841ceb;
+}
+
+/* Hide arrows for Chrome, Safari, Edge, and Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide arrows for Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari */
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
 }
 
 body {
-  background-image: url("/background.png");
+  background-image: url("/neon.png");
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+.welcome-grid {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
 }

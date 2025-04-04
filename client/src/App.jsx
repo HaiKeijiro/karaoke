@@ -26,7 +26,9 @@ function App() {
     <>
       {start === false && <Welcome start={() => setStart(true)} />}
 
-      {start === true && <div className="p-10">{pageOrder[step]}</div>}
+      {start === true && (
+        <div className="welcome-grid gap-4 p-6">{pageOrder[step]}</div>
+      )}
     </>
   );
 }

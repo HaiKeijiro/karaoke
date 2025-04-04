@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { fetchSongs } from "../../api/API";
 import { CategoriesContext } from "../../context/GlobalContext";
 
-const Songs = ({ nextSelection }) => {
+const Songs = () => {
   const [songs, setSongs] = useState([]);
 
   const { selectedCategory, selectedGenre, selectedSong, setSelectedSong } =
@@ -28,9 +28,9 @@ const Songs = ({ nextSelection }) => {
       {songs.map((song, i) => (
         <div
           key={i}
-          className={`p-4 bg-blue-100 rounded grid overflow-hidden cursor-pointer border-2 transition-all ${
+          className={`p-10 bg-main rounded grid overflow-hidden cursor-pointer border-2 transition-all ${
             selectedSong === song
-              ? "border-black shadow-lg"
+              ? "border-5 border-secondary shadow-lg"
               : "border-transparent"
           }`}
           onClick={() => setSelectedSong(song)}
@@ -38,14 +38,6 @@ const Songs = ({ nextSelection }) => {
           <h1 className="m-auto">{song}</h1>
         </div>
       ))}
-      {selectedSong && (
-        <button
-          className="bg-red-200 py-2 px-4 rounded mt-4 w-fit m-auto"
-          onClick={nextSelection}
-        >
-          Start Singing
-        </button>
-      )}
     </div>
   );
 };

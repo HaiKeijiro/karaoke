@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { addUser } from "../api/API";
 import Brands from "./Brands";
+import BrushStoke from "./BrushStoke";
 
 const UserForm = ({ nextPage }) => {
   const nameRef = useRef(null);
@@ -28,33 +29,46 @@ const UserForm = ({ nextPage }) => {
   };
 
   return (
-    <div className="h-screen">
+    <>
       <Brands />
 
-      <form className="w-fit m-auto mt-32">
-        <h1 className="text-red-500 font-bold text-center">
-          <em>Karaoke Challenge</em>
-        </h1>
-        <div>
-          <label htmlFor="name" className="block">
-            Nama
-          </label>
-          <input ref={nameRef} type="text" className="border" id="name" />
-        </div>
-        <div>
-          <label htmlFor="no hp" className="block">
-            Nomor HP
-          </label>
-          <input ref={phoneRef} type="number" className="border" id="phone" />
-        </div>
-        <button
-          className="bg-red-200 py-2 px-4 rounded mt-4"
-          onClick={handleClick}
-        >
-          Start Game
-        </button>
-      </form>
-    </div>
+      <div className="bg-white/10 text-white backdrop-blur-sm rounded-md grid">
+        <form className="m-auto flex flex-col items-center justify-center">
+          <BrushStoke />
+          <h1 className="font-bold text-center text-3xl">
+            <em>Karaoke Challenge</em>
+          </h1>
+          <div className="w-[45%]">
+            <label htmlFor="name" className="block">
+              Nama
+            </label>
+            <input
+              ref={nameRef}
+              type="text"
+              className="border-2 w-full py-2 rounded"
+              id="name"
+            />
+          </div>
+          <div className="w-[45%] mt-2">
+            <label htmlFor="no hp" className="block">
+              Nomor HP
+            </label>
+            <input
+              ref={phoneRef}
+              type="number"
+              className="border-2 w-full py-2 rounded"
+              id="phone"
+            />
+          </div>
+          <button
+            className="bg-main w-[45%] py-3 rounded mt-8 text-xl cursor-pointer"
+            onClick={handleClick}
+          >
+            Start Game
+          </button>
+        </form>
+      </div>
+    </>
   );
 };
 

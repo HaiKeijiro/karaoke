@@ -9,13 +9,13 @@ const Categories = ({ nextSelection }) => {
       {categories.map((category, i) => (
         <div
           key={i}
-          className="p-10 bg-blue-100 rounded grid"
+          className="p-10 bg-main rounded grid"
           onClick={() => {
             setSelectedCategory(category);
             nextSelection();
           }}
         >
-          <h1 className="m-auto uppercase">{category}</h1>
+          <h1 className="m-auto">{category}</h1>
         </div>
       ))}
     </div>

@@ -25,7 +25,7 @@ const Genres = ({ nextSelection }) => {
       {genres.map((genre, i) => (
         <div
           key={i}
-          className="p-10 bg-blue-100 rounded grid"
+          className="p-10 bg-main rounded grid"
           onClick={() => {
             setSelectedGenre(genre);
             nextSelection();
