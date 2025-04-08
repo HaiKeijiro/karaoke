@@ -6,6 +6,7 @@ const Karaoke = () => {
   const [song, setSong] = useState(null);
   const [parsedLyrics, setParsedLyrics] = useState([]);
   const [currentLyricIndex, setCurrentLyricIndex] = useState(0);
+  
   const audioRef = useRef(null);
   const lyricsContainerRef = useRef(null);
   const { selectedCategory, selectedGenre, selectedSong } =

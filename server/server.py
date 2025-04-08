@@ -54,6 +54,26 @@ def serve_lyrics(category, subcategory, song):
         return send_from_directory(os.path.join(MUSIC_DIR, category, subcategory), lyrics_file)
     return jsonify({"error": "Lyrics not found"}), 404
 
+@app.route("/search/<category>/<subcategory>")
+def search_songs(category, subcategory):
+    """Search for songs within a specific category and subcategory"""
+    query = request.args.get('q', '').lower()
+    if not query:
+        return jsonify([])
+        
+    subcategory_path = os.path.join(MUSIC_DIR, category, subcategory)
+    try:
+        # Get all songs in the subcategory
+        all_songs = [song.replace(".mp3", "") for song in os.listdir(subcategory_path) 
+                    if song.endswith(".mp3")]
+        
+        # Filter songs that match the search query
+        matching_songs = [song for song in all_songs if query in song.lower()]
+        
+        return jsonify(matching_songs)
+    except FileNotFoundError:
+        return jsonify({"error": "Category or subcategory not found"}), 500
+
 # Database
 def get_db_connection():
     connection = sqlite3.connect("karaoke.db")

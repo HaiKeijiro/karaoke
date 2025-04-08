@@ -85,3 +85,15 @@ export const fetchLyrics = async (category, genre, song) => {
     console.error("Error fetching lyrics ", error);
   }
 };
+
+export const searchSongs = async (query, category, genre) => {
+  try {
+    const response = await axios.get(
+      `${base_url}/search/${category}/${genre}?q=${encodeURIComponent(query)}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error searching songs: ", error);
+    return [];
+  }
+};
