@@ -1,8 +1,9 @@
-from flask import Flask, render_template, jsonify, send_from_directory, request, url_for, redirect
+from flask import Flask, render_template, jsonify, send_from_directory, request, url_for, redirect, send_file
 from flask_cors import CORS
 import os
 import sqlite3
 import fnmatch
+import csv
 
 app = Flask(__name__)
 cors = CORS(app, origins="*")
@@ -98,6 +99,30 @@ def add_data():
         connection.close()
         
         return jsonify({"status": "success", "message": "User added successfully"})
+    
+@app.route('/api/export', methods=['GET'])
+def export_to_csv():
+    try:
+        conn = sqlite3.connect("karaoke.db")
+        cursor = conn.cursor()
+
+        cursor.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='user_table'")
+        if not cursor.fetchone():
+            return jsonify({"error": f"Table 'user_table' does not exist."}), 404
+
+        cursor.execute(f"SELECT * FROM user_table")
+        rows = cursor.fetchall()
+        column_names = [description[0] for description in cursor.description]
+
+        csv_file_path = f"user_table.csv"
+        with open(csv_file_path, mode='w', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow(column_names)
+            writer.writerows(rows)
+
+        return send_file(csv_file_path, as_attachment=True)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
     
 if __name__ ==  "__main__":
     app.run(debug=True, port=8000)

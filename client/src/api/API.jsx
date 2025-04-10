@@ -97,3 +97,25 @@ export const searchSongs = async (query, category, genre) => {
     return [];
   }
 };
+
+export const exportTableToCSV = async () => {
+  try {
+    const response = await axios.get(`${base_url}/api/export`, {
+      responseType: "blob", // To handle file download
+    });
+
+    // Create a downloadable link for the file
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "user_table.csv");
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error exporting table:", error);
+    return { success: false, error };
+  }
+};

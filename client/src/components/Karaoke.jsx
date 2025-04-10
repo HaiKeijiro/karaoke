@@ -1,16 +1,38 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { fetchLyrics, playSong } from "../api/API";
 import { CategoriesContext } from "../context/GlobalContext";
+import Thanks from "./Thanks";
 
 const Karaoke = () => {
   const [song, setSong] = useState(null);
   const [parsedLyrics, setParsedLyrics] = useState([]);
   const [currentLyricIndex, setCurrentLyricIndex] = useState(0);
-  
+  const [isStopped, setIsStopped] = useState(false);
+  const [showThanks, setShowThanks] = useState(false);
+
   const audioRef = useRef(null);
   const lyricsContainerRef = useRef(null);
   const { selectedCategory, selectedGenre, selectedSong } =
     useContext(CategoriesContext);
+
+  const handleStopSong = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsStopped(true);
+    }
+  };
+
+  const handleRestartSong = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play();
+      setIsStopped(false);
+    }
+  };
+
+  const handleEndSong = () => {
+    setShowThanks(true);
+  };
 
   useEffect(() => {
     async function playSelectedSong() {
@@ -67,6 +89,10 @@ const Karaoke = () => {
     }
   }
 
+  const handleSongEnded = () => {
+    setShowThanks(true);
+  };
+
   // Auto-scroll to current lyric only after the timestamp starts
   useEffect(() => {
     if (lyricsContainerRef.current && parsedLyrics.length > 0) {
@@ -88,6 +114,10 @@ const Karaoke = () => {
     }
   }, [currentLyricIndex, parsedLyrics]);
 
+  if (showThanks) {
+    return <Thanks />;
+  }
+
   return (
     <div className="relative mx-auto text-center text-white">
       {song && (
@@ -95,6 +125,7 @@ const Karaoke = () => {
           ref={audioRef}
           src={song}
           onTimeUpdate={handleTimeUpdate}
+          onEnded={handleSongEnded}
           className="hidden"
           autoPlay
         />
@@ -117,6 +148,32 @@ const Karaoke = () => {
             {lyric.text}
           </p>
         ))}
+      </div>
+
+      <div className="mt-8 pb-6">
+        {!isStopped ? (
+          <button
+            onClick={handleStopSong}
+            className="bg-main cursor-pointer px-10 py-2 rounded uppercase font-bold"
+          >
+            Stop
+          </button>
+        ) : (
+          <div className="flex justify-center gap-4">
+            <button
+              onClick={handleRestartSong}
+              className="bg-secondary cursor-pointer px-10 py-2 rounded uppercase font-bold"
+            >
+              Restart
+            </button>
+            <button
+              onClick={handleEndSong}
+              className="bg-main cursor-pointer px-10 py-2 rounded uppercase font-bold"
+            >
+              End Song
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

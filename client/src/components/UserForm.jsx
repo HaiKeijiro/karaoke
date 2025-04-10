@@ -32,7 +32,7 @@ const UserForm = ({ nextPage }) => {
     <>
       <Brands />
 
-      <div className="bg-white/10 text-white backdrop-blur-sm rounded-md grid">
+      <div className="bg-white/10 text-white backdrop-blur-md rounded-md grid">
         <form className="m-auto flex flex-col items-center justify-center">
           <BrushStoke />
           <h1 className="font-bold text-center text-3xl">
