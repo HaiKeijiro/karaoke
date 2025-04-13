@@ -3,12 +3,11 @@ import { fetchLyrics, playSong } from "../api/API";
 import { CategoriesContext } from "../context/GlobalContext";
 import Thanks from "./Thanks";
 
-const Karaoke = () => {
+const Karaoke = ({ nextPage }) => {
   const [song, setSong] = useState(null);
   const [parsedLyrics, setParsedLyrics] = useState([]);
   const [currentLyricIndex, setCurrentLyricIndex] = useState(0);
   const [isStopped, setIsStopped] = useState(false);
-  const [showThanks, setShowThanks] = useState(false);
 
   const audioRef = useRef(null);
   const lyricsContainerRef = useRef(null);
@@ -31,7 +30,7 @@ const Karaoke = () => {
   };
 
   const handleEndSong = () => {
-    setShowThanks(true);
+    nextPage();
   };
 
   useEffect(() => {
@@ -90,7 +89,7 @@ const Karaoke = () => {
   }
 
   const handleSongEnded = () => {
-    setShowThanks(true);
+    nextPage();
   };
 
   // Auto-scroll to current lyric only after the timestamp starts
@@ -114,10 +113,6 @@ const Karaoke = () => {
     }
   }, [currentLyricIndex, parsedLyrics]);
 
-  if (showThanks) {
-    return <Thanks />;
-  }
-
   return (
     <div className="relative mx-auto text-center text-white">
       {song && (
@@ -126,8 +121,9 @@ const Karaoke = () => {
           src={song}
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleSongEnded}
-          className="hidden"
-          autoPlay
+          controls // remove this part
+          // className="hidden"
+          // autoPlay
         />
       )}
 

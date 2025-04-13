@@ -8,7 +8,7 @@ import Karaoke from "./Karaoke";
 import Brands from "./Brands";
 import Modal from "./Modal";
 
-const UserSelection = ({ previousPage }) => {
+const UserSelection = ({ nextPage }) => {
   const [currentSelection, setCurrentSelection] = useState(0);
   const [modal, setModal] = useState(false);
 
@@ -29,7 +29,7 @@ const UserSelection = ({ previousPage }) => {
     <Categories nextSelection={handleNext} />,
     <Genres nextSelection={handleNext} />,
     <Songs />,
-    <Karaoke />,
+    <Karaoke nextPage={nextPage} />,
   ];
 
   // Wrap with provider content in a component to access context

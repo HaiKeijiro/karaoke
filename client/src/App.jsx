@@ -3,6 +3,7 @@ import { useState } from "react";
 import UserForm from "./components/UserForm";
 import Welcome from "./components/Welcome";
 import UserSelection from "./components/UserSelection";
+import Thanks from "./components/Thanks";
 
 function App() {
   const [step, setStep] = useState(0);
@@ -18,7 +19,8 @@ function App() {
 
   const pageOrder = [
     <UserForm nextPage={nextPage} />,
-    <UserSelection previousPage={backPage} />,
+    <UserSelection previousPage={backPage} nextPage={nextPage} />,
+    <Thanks />,
   ];
 
   return (
