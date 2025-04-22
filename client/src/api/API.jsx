@@ -27,7 +27,6 @@ export const fetchCategories = async () => {
     return response.data;
   } catch (error) {
     console.error("Error fetching categories: ", error);
-    setError("Error loading categories.");
   }
 };
 
@@ -37,7 +36,6 @@ export const fetchGenres = async (category) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching categories: ", error);
-    setError("Error loading categories.");
   }
 };
 
