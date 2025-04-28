@@ -5,7 +5,6 @@ const ScoreDisplay = () => {
   const [finalScore, setFinalScore] = useState(0);
   const [compliment, setCompliment] = useState("");
   const [isAnimating, setIsAnimating] = useState(true);
-  const [showScoreText, setShowScoreText] = useState(false);
 
   useEffect(() => {
     // Generate random score between 80-95
@@ -30,11 +29,6 @@ const ScoreDisplay = () => {
       if (currentScore >= randomScore) {
         clearInterval(interval);
         setIsAnimating(false);
-
-        // Show score text with delay for better visual effect
-        setTimeout(() => {
-          setShowScoreText(true);
-        }, 500);
       }
     }, 30);
 
@@ -52,13 +46,7 @@ const ScoreDisplay = () => {
     <div className="my-8 flex flex-col items-center">
       {/* Score card with glow effect */}
       <div
-        className={`relative shadow-lg ${
-          finalScore >= 91
-            ? "shadow-green-500/20"
-            : finalScore >= 86
-            ? "shadow-blue-500/20"
-            : "shadow-yellow-500/20"
-        }`}
+        className={`relative`}
       >
         {/* Animated number */}
         <div
@@ -84,15 +72,6 @@ const ScoreDisplay = () => {
           }`}
         >
           {compliment}
-        </div>
-
-        {/* Score label */}
-        <div className="mt-3 text-gray-300">
-          {showScoreText && (
-            <div className="animate-pulse transition-opacity duration-1000 opacity-100">
-              Your Karaoke Score
-            </div>
-          )}
         </div>
       </div>
 
